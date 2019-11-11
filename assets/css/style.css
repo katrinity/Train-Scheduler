@@ -1,0 +1,51 @@
+.container{
+    margin: 25px;
+}
+
+.jumbotron {
+    position : relative;
+    background-position: 0% 55%;
+    font-family: fantasy;
+    color : coral;  
+    text-align: center;
+}
+
+.card{
+    border : solid;
+    border-radius: 10px;
+    box-shadow: 0 7px 6px -6px;
+}
+
+#trainTable, #form-input{
+    font-family: fantasy;
+}
+
+.thead-default{
+    background-color : lightgrey; 
+}
+.tableBody{
+    height : 100px;
+    overflow : auto;
+}
+
+.panel, .card-heading {
+    padding-left : 10px;
+    background-color : coral;
+    font-family: fantasy;
+  
+}
+
+.form-control, .tableRow {
+    box-shadow : inset 1px 0 10px;
+}
+
+.btn{
+    background-color : coral; 
+    cursor: pointer;
+    width : 100%;
+    font-family: fantasy; 
+}
+
+.btn:hover{
+    background: rgb(201, 64, 14);
+}
