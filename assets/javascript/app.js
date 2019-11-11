@@ -6,7 +6,6 @@ function runningClock() {
     time = moment().format("hh:mm:ss A");
     $("#time").text(time);
 }
-//  Call function with setInterval
 clock = setInterval(runningClock, 1000);
 
 var firebaseConfig = {
@@ -26,16 +25,15 @@ firebase.initializeApp(firebaseConfig);
 var database = firebase.database();
 
 
-
+var clock;
 var name;
+var time;
 var destination;
-var firstArrival;
+var arrival;
 var frequency;
 var database;
-var trainFirebaseData;
-var newFirebaseData;
-var time;
-var clock;
+var trainData;
+
 
 
 
@@ -46,50 +44,46 @@ $(document).ready(function () {
 
         name = $("#train-input").val().trim();
         destination = $("#destination-input").val().trim();
-        firstArrival = $("#time-input").val().trim();
+        arrival = $("#time-input").val().trim();
         frequency = $("#frequency-input").val().trim();
 
-        trainFirebaseData = {
+        trainData = {
             DataTrainName: name,
-            DataDest: destination,
-            DataFirstArrival: firstArrival,
+            DataDestination: destination,
+            DataArrival: arrival,
             DataFrequency: frequency,
-            TimeStamp: firebase.database.ServerValue.TIMESTAMP
+
         };
 
-        database.ref().push(trainFirebaseData);
+        database.ref().push(trainData);
         clear();
 
     });
 
     database.ref().on("child_added", function (childSnapshot) {
         var snapName = childSnapshot.val().DataTrainName;
-        var snapDest = childSnapshot.val().DataDest;
-        var snapFreq = childSnapshot.val().DataFrequency;
-        var snapArrival = childSnapshot.val().DataFirstArrival;
+        var snapDestination = childSnapshot.val().DataDestination;
+        var snapFrequency = childSnapshot.val().DataFrequency;
+        var snapArrival = childSnapshot.val().DataArrival;
 
-        //  Time
-        var timeNow = moment();
-        //  Convert Time and configure for Future use by pushing firstArrival back 1 year
-        var firstArrivalConverted = moment(snapArrival, "HH:mm A").subtract(1, "years");
-        //  Calculate now vs First Arrival
-        var diff = moment().diff(moment(firstArrivalConverted), "minutes");
-        var left = diff % snapFreq;
-        // Wait s
-        var timeLeft = snapFreq - left;
-        var newArrival = moment().add(timeLeft, "m").format("HH:mm: A");
+        //var time = moment();
+        var arrival = moment(snapArrival, "hh:mm").subtract(1, "years");
+        var diff = moment().diff(moment(arrival), "minutes");
+        var Remainder = diff % snapFrequency;
+        var timeLeft = snapFrequency - Remainder;
+        var nextArrival = moment().add(timeLeft, "minutes").format("hh:mm");
 
-        $("#trainTable").append("<tr><td>" + snapName + "</td><td>" + snapDest + "</td><td>" + snapFreq + "</td><td>" +
-            newArrival + "</td><td>" + timeLeft + "</td></tr>");
+        $("#trainTable").append("<tr><td>" + snapName + "</td><td>" + snapDestination + "</td><td>" + snapFrequency + "</td><td>" +
+            nextArrival + "</td><td>" + timeLeft + "</td></tr>");
 
-        // database.ref().child(childSnapshot.key).remove();
+        //database.ref().child(childSnapshot.key).remove();
     });
 
     function clear() {
-        $("#trainNameInput").val("");
-        $("#destinationInput").val("");
-        $("#firstTrainTimeInput").val("");
-        $("#frequencyInput").val("");
+        $("#train-input").val("");
+        $("#destination-input").val("");
+        $("#time-input").val("");
+        $("#frequency-input").val("");
     }
 
 
